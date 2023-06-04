@@ -48,10 +48,8 @@ class FacebookToolkit:
         data["password"] = self.password
         data["return_ssl_resources"] = "0"
         data["v"] = "1.0"
-        sig = ""
-        for key in data:
-            sig +=  "{0}={1}".format(key,data[key])
-        data["sig"] = hashlib.md5(sig+"62f8ce9f74b12f84c123cc23437a4a32").hexdigest()
+        sig = "".join("{0}={1}".format(key,data[key]) for key in data)
+        data["sig"] = hashlib.md5(f"{sig}62f8ce9f74b12f84c123cc23437a4a32").hexdigest()
         try:
             return json.loads(urllib2.urlopen("https://api.facebook.com/restserver.php?{0}".format(urlencode(data))).read())["access_token"]
         except:
